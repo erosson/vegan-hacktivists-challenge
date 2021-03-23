@@ -2,29 +2,35 @@
   <form method="post" action="">
     @csrf
 
-    <textarea name="body" placeholder="{{ $placeholder }}">{{ old('body') }}</textarea>
-    <div><button type="submit">Ask</button></div>
+    <div class="form-group">
+      <textarea class="form-control" name="body" placeholder="{{ $placeholder }}">{{ old('body') }}</textarea>
+    </div>
+    <div class="form-group">
+      <button class="btn btn-primary" type="submit">Ask</button>
+    </div>
 
     @if ($errors->any())
-      <ul>
+      <ul class="list-group">
       @foreach ($errors->all() as $error)
-        <li>{{ $error }}</li>
+        <li class="list-group-item list-group-item-danger">{{ $error }}</li>
       @endforeach
       </ul>
     @endif
   </form>
 
-  @if ($questions)
-    <table>
-      @foreach ($questions as $question)
-        <tr>
-          <td><a href="/questions/{{ $question->id }}">{{ $question->body }}</a></td>
-          <td>{{ $question->answers_count }} answers</td>
-          <td>{{ $question->created_at }}</td>
-        </tr>
-      @endforeach
-    </table>
-  @else
+  <h1>Questions for Vegans</h1>
+
+  @if ($questions->isEmpty())
     <p>No questions yet.</p>
+  @else
+    <div class="list-group">
+      @foreach ($questions as $question)
+        <a class="list-group-item list-group-item-action" href="/questions/{{ $question->id }}">
+          <div>{{ $question->body }}</div>
+          <div><small class="text-secondary">asked {{ $question->created_at->diffForHumans() }}</small></div>
+          <div><small class="text-secondary">{{ $question->answers_count }} {{ Str::plural('answer', $question->answers_count) }}</small></div>
+        </a>
+      @endforeach
+    </div>
   @endif
 </x-layout>
