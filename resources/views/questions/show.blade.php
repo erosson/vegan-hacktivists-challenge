@@ -8,7 +8,8 @@
     <body>
       <h1><a href="/">Ask a Vegan</a></h1>
 
-      <h2>questions.show {{$id}}</h2>
+      <h2>{{$question->body}}</h2>
+      <i>{{$question->created_at}}</i>
 
       <form method="post" action="">
         @csrf
@@ -24,5 +25,14 @@
           </ul>
         @endif
       </form>
+
+      <ul>
+        @foreach ($question->answers as $answer)
+          <li>
+            <p>{{$answer->body}}</p>
+            <i>{{$answer->created_at}}</i>
+          </li>
+        @endforeach
+      </ul>
     </body>
 </html>

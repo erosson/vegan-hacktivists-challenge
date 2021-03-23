@@ -8,8 +8,6 @@
     <body>
       <h1><a href="/">Ask a Vegan</a></h1>
 
-      <h2>questions.list</h2>
-
       <form method="post" action="">
         @csrf
 
@@ -25,8 +23,18 @@
         @endif
       </form>
 
-      <ul>
-        <li><a href="/questions/1">/questions/1</a></li>
-      </ul>
+      @if ($questions)
+        <table>
+          @foreach ($questions as $question)
+            <tr>
+              <td><a href="/questions/{{$question->id}}">{{$question->body}}</a></td>
+              <td>{{$question->answers_count}} answers</td>
+              <td>{{$question->created_at}}</td>
+            </tr>
+          @endforeach
+        </table>
+      @else
+        <p>No questions yet.</p>
+      @endif
     </body>
 </html>

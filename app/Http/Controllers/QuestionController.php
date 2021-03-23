@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Question;
 
 class QuestionController extends Controller
 {
     public function list() {
-      // TODO db lookup questions
-      return view('questions.list');
+      // $questions = Question::all();
+      $questions = Question::withCount('answers')->orderBy('created_at', 'desc')->get();
+      return view('questions.list', ['questions' => $questions]);
     }
     public function create(Request $req) {
       // https://laravel.com/docs/8.x/validation
@@ -17,12 +19,13 @@ class QuestionController extends Controller
       ]);
       // request.validate() throws a redirect on failure - so if we get here, validation passed
 
-      // TODO db insert
+      $question = new Question;
+      $question->body = $req->body;
+      $question->save();
 
-      return redirect('/');
+      return redirect("/questions/{$question->id}");
     }
-    public function show(int $question) {
-      // TODO db lookup question
-      return view('questions.show', ['id' => $question]);
+    public function show(Question $question) {
+      return view('questions.show', ['question' => $question, 'answers' => $question->answers()]);
     }
 }
