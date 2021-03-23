@@ -2,13 +2,13 @@
   <form method="post" action="">
     @csrf
 
-    <textarea name="body" placeholder="TODO random placeholder">{{ old('body') }}</textarea>
+    <textarea name="body" placeholder="{{ $placeholder }}">{{ old('body') }}</textarea>
     <div><button type="submit">Ask</button></div>
 
     @if ($errors->any())
       <ul>
       @foreach ($errors->all() as $error)
-        <li>{{$error}}</li>
+        <li>{{ $error }}</li>
       @endforeach
       </ul>
     @endif
@@ -18,9 +18,9 @@
     <table>
       @foreach ($questions as $question)
         <tr>
-          <td><a href="/questions/{{$question->id}}">{{$question->body}}</a></td>
-          <td>{{$question->answers_count}} answers</td>
-          <td>{{$question->created_at}}</td>
+          <td><a href="/questions/{{ $question->id }}">{{ $question->body }}</a></td>
+          <td>{{ $question->answers_count }} answers</td>
+          <td>{{ $question->created_at }}</td>
         </tr>
       @endforeach
     </table>

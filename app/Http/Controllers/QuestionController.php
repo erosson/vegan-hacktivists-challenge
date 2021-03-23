@@ -8,16 +8,16 @@ use App\Models\Question;
 class QuestionController extends Controller
 {
     public function list() {
-      // $questions = Question::all();
       $questions = Question::withCount('answers')->orderBy('created_at', 'desc')->get();
-      return view('questions.list', ['questions' => $questions]);
+      return view('questions.list', [
+        'questions' => $questions,
+        'placeholder' => PLACEHOLDERS[array_rand(PLACEHOLDERS)],
+      ]);
     }
     public function create(Request $req) {
-      // https://laravel.com/docs/8.x/validation
       $req->validate([
         'body' => ['required', 'min:5', 'ends_with:?'],
       ]);
-      // request.validate() throws a redirect on failure - so if we get here, validation passed
 
       $question = new Question;
       $question->body = $req->body;
@@ -26,6 +26,21 @@ class QuestionController extends Controller
       return redirect("/questions/{$question->id}");
     }
     public function show(Question $question) {
-      return view('questions.show', ['question' => $question, 'answers' => $question->answers()]);
+      return view('questions.show', [
+        'question' => $question,
+        'answers' => $question->answers(),
+      ]);
     }
 }
+
+const PLACEHOLDERS = [
+  "What's your favorite vegetable?",
+  "How long have you been vegan?",
+  "Why did you go vegan?",
+  "Are you still vegan when you travel?",
+  "How do they milk the almonds?",
+  "How do you really feel about milk powder?",
+  "Bacon tho?",
+  "\"'/><b mouseover=alert(/xss/)>Are my beliefs about cross-site scripting in PHP outdated?",
+  "\"';drop table questions;--Are my beliefs about SQL injection in PHP outdated?",
+];
